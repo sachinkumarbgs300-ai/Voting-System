@@ -1,0 +1,399 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #1e3a5f 0%,
+            #0f172a 45%,
+            #020617 100%
+        );
+
+    color: #ffffff;
+
+    min-height: 100vh;
+
+    padding: 40px 20px;
+}
+
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: auto;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    text-align: center;
+
+    margin-bottom: 40px;
+}
+
+
+header h1 {
+    font-size: 42px;
+
+    margin-bottom: 12px;
+
+    letter-spacing: 1px;
+}
+
+
+.subtitle {
+    color: #94a3b8;
+
+    font-size: 17px;
+}
+
+
+/* =========================
+   DEVELOPMENT NOTICE
+========================= */
+
+.notice {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    background: rgba(120, 85, 10, 0.25);
+
+    border: 1px solid #a16207;
+
+    border-radius: 14px;
+
+    padding: 25px;
+
+    margin-bottom: 30px;
+}
+
+
+.notice-icon {
+    font-size: 35px;
+}
+
+
+.notice h2 {
+    color: #facc15;
+
+    margin-bottom: 8px;
+}
+
+
+.notice p {
+    color: #cbd5e1;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+   WALLET
+========================= */
+
+.wallet-section {
+    background: rgba(15, 23, 42, 0.8);
+
+    border: 1px solid #334155;
+
+    border-radius: 14px;
+
+    padding: 25px;
+
+    margin-bottom: 35px;
+
+    text-align: center;
+}
+
+
+.wallet-section h2 {
+    margin-bottom: 12px;
+}
+
+
+#walletStatus {
+    color: #94a3b8;
+
+    margin-bottom: 18px;
+}
+
+
+#connectWallet {
+    padding: 12px 25px;
+
+    background: #2563eb;
+
+    border: none;
+
+    border-radius: 8px;
+
+    color: white;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+#connectWallet:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================
+   CANDIDATES
+========================= */
+
+.candidate-section {
+    margin-bottom: 35px;
+}
+
+
+.section-title {
+    text-align: center;
+
+    margin-bottom: 20px;
+
+    font-size: 26px;
+}
+
+
+.candidates {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 22px;
+}
+
+
+.candidate {
+    background: rgba(15, 23, 42, 0.85);
+
+    border: 1px solid #334155;
+
+    border-radius: 16px;
+
+    padding: 30px 20px;
+
+    text-align: center;
+
+    transition: 0.2s;
+}
+
+
+.candidate:hover {
+    transform: translateY(-4px);
+
+    border-color: #475569;
+}
+
+
+.candidate-icon {
+    width: 65px;
+
+    height: 65px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    background: #1e40af;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 25px;
+
+    font-weight: bold;
+}
+
+
+.candidate h2 {
+    margin-bottom: 8px;
+}
+
+
+.candidate-role {
+    color: #64748b;
+
+    margin-bottom: 20px;
+}
+
+
+.votes {
+    color: #cbd5e1;
+
+    margin-bottom: 20px;
+
+    font-size: 16px;
+}
+
+
+.vote-button {
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #475569;
+
+    color: #94a3b8;
+
+    font-size: 15px;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   SYSTEM STATUS
+========================= */
+
+.system-status {
+    background: rgba(15, 23, 42, 0.85);
+
+    border: 1px solid #334155;
+
+    border-radius: 14px;
+
+    padding: 28px;
+
+    margin-bottom: 35px;
+}
+
+
+.system-status h2 {
+    text-align: center;
+
+    margin-bottom: 25px;
+}
+
+
+.status-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 15px;
+}
+
+
+.status-item {
+    background: #111827;
+
+    border-radius: 10px;
+
+    padding: 18px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+
+.status-label {
+    color: #cbd5e1;
+}
+
+
+.status-value {
+    font-weight: bold;
+}
+
+
+.pending {
+    color: #f59e0b;
+}
+
+
+.disabled {
+    color: #ef4444;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    text-align: center;
+
+    padding: 20px;
+
+    color: #94a3b8;
+}
+
+
+.footer-subtitle {
+    margin-top: 6px;
+
+    font-size: 13px;
+
+    color: #64748b;
+}
+
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+@media (max-width: 800px) {
+
+    header h1 {
+        font-size: 32px;
+    }
+
+
+    .candidates {
+        grid-template-columns: 1fr;
+    }
+
+
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    body {
+        padding: 25px 12px;
+    }
+
+
+    .notice {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+}
