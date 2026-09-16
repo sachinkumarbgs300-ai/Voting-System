@@ -8,6 +8,9 @@
     <title>Decentralized Voting System</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <!-- Ethers.js -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"></script>
 </head>
 
 <body>
@@ -16,13 +19,11 @@
 
         <!-- Header -->
         <header>
-
             <h1>Decentralized Voting System</h1>
 
             <p class="subtitle">
                 Blockchain-Based Secure Voting Platform
             </p>
-
         </header>
 
 
@@ -34,12 +35,10 @@
             </div>
 
             <div>
-                <h2>Voting Not Yet Open</h2>
+                <h2 id="votingTitle">Voting System</h2>
 
-                <p>
-                    The voting system is currently under development.
-                    Voting will be enabled after blockchain integration
-                    and smart contract deployment.
+                <p id="votingMessage">
+                    Connect your MetaMask wallet to access the voting system.
                 </p>
             </div>
 
@@ -69,9 +68,7 @@
                 Candidates
             </h2>
 
-
             <div class="candidates">
-
 
                 <!-- Candidate A -->
                 <div class="candidate">
@@ -87,11 +84,11 @@
                     </p>
 
                     <div class="votes">
-                        Votes: —
+                        Votes: <span id="votesA">0</span>
                     </div>
 
-                    <button class="vote-button" disabled>
-                        Voting Disabled
+                    <button class="vote-button" id="voteA" onclick="vote(0)" disabled>
+                        Vote
                     </button>
 
                 </div>
@@ -111,11 +108,11 @@
                     </p>
 
                     <div class="votes">
-                        Votes: —
+                        Votes: <span id="votesB">0</span>
                     </div>
 
-                    <button class="vote-button" disabled>
-                        Voting Disabled
+                    <button class="vote-button" id="voteB" onclick="vote(1)" disabled>
+                        Vote
                     </button>
 
                 </div>
@@ -135,11 +132,11 @@
                     </p>
 
                     <div class="votes">
-                        Votes: —
+                        Votes: <span id="votesC">0</span>
                     </div>
 
-                    <button class="vote-button" disabled>
-                        Voting Disabled
+                    <button class="vote-button" id="voteC" onclick="vote(2)" disabled>
+                        Vote
                     </button>
 
                 </div>
@@ -156,7 +153,6 @@
                 System Status
             </h2>
 
-
             <div class="status-grid">
 
                 <div class="status-item">
@@ -165,8 +161,8 @@
                         Smart Contract
                     </span>
 
-                    <span class="status-value pending">
-                        Not Deployed
+                    <span class="status-value" id="contractStatus">
+                        Deployed
                     </span>
 
                 </div>
@@ -178,7 +174,7 @@
                         Blockchain Network
                     </span>
 
-                    <span class="status-value pending">
+                    <span class="status-value" id="networkStatus">
                         Not Connected
                     </span>
 
@@ -191,7 +187,7 @@
                         Wallet
                     </span>
 
-                    <span class="status-value pending">
+                    <span class="status-value" id="walletSystemStatus">
                         Not Connected
                     </span>
 
@@ -204,8 +200,8 @@
                         Voting
                     </span>
 
-                    <span class="status-value disabled">
-                        Disabled
+                    <span class="status-value" id="votingStatus">
+                        Not Connected
                     </span>
 
                 </div>
@@ -223,7 +219,7 @@
             </p>
 
             <p class="footer-subtitle">
-                Development Prototype • Blockchain Integration Pending
+                Blockchain Integration Active
             </p>
 
         </footer>
