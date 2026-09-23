@@ -1,0 +1,42 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_34-9ba575b25e139fa4053bbd71eec14de62778ea3e",
+  "solcVersion": "0.8.34",
+  "solcLongVersion": "0.8.34+commit.80d5c536",
+  "compilerType": "solc",
+  "userSourceNameMap": {
+    "contracts/Voting.sol": "project/contracts/Voting.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "osaka",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/Voting.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity ^0.8.24;\r\n\r\ncontract Voting {\r\n\r\n    struct Candidate {\r\n        string name;\r\n        uint256 voteCount;\r\n    }\r\n\r\n    Candidate[] public candidates;\r\n\r\n    // Stores whether each wallet has already voted\r\n    mapping(address => bool) public hasVoted;\r\n\r\n    address public owner;\r\n\r\n    bool public votingActive;\r\n\r\n    event VoteCast(\r\n        address indexed voter,\r\n        uint256 indexed candidateId\r\n    );\r\n\r\n    event VotingEnded();\r\n\r\n    constructor() {\r\n        owner = msg.sender;\r\n\r\n        votingActive = true;\r\n\r\n        candidates.push(\r\n            Candidate(\"Candidate A\", 0)\r\n        );\r\n\r\n        candidates.push(\r\n            Candidate(\"Candidate B\", 0)\r\n        );\r\n\r\n        candidates.push(\r\n            Candidate(\"Candidate C\", 0)\r\n        );\r\n    }\r\n\r\n    function vote(uint256 candidateId) public {\r\n\r\n        require(\r\n            votingActive,\r\n            \"Voting is not active\"\r\n        );\r\n\r\n        require(\r\n            !hasVoted[msg.sender],\r\n            \"You have already voted\"\r\n        );\r\n\r\n        require(\r\n            candidateId < candidates.length,\r\n            \"Invalid candidate\"\r\n        );\r\n\r\n        // Mark this wallet as having voted\r\n        hasVoted[msg.sender] = true;\r\n\r\n        // Increase selected candidate's vote count\r\n        candidates[candidateId].voteCount++;\r\n\r\n        emit VoteCast(\r\n            msg.sender,\r\n            candidateId\r\n        );\r\n    }\r\n\r\n    function endVoting() public {\r\n\r\n        require(\r\n            msg.sender == owner,\r\n            \"Only owner can end voting\"\r\n        );\r\n\r\n        votingActive = false;\r\n\r\n        emit VotingEnded();\r\n    }\r\n\r\n    function getCandidateCount()\r\n        public\r\n        view\r\n        returns (uint256)\r\n    {\r\n        return candidates.length;\r\n    }\r\n\r\n    function getCandidate(uint256 candidateId)\r\n        public\r\n        view\r\n        returns (\r\n            string memory name,\r\n            uint256 voteCount\r\n        )\r\n    {\r\n        require(\r\n            candidateId < candidates.length,\r\n            \"Invalid candidate\"\r\n        );\r\n\r\n        Candidate memory candidate =\r\n            candidates[candidateId];\r\n\r\n        return (\r\n            candidate.name,\r\n            candidate.voteCount\r\n        );\r\n    }\r\n}"
+      }
+    }
+  }
+}

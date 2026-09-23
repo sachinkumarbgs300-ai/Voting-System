@@ -1,83 +1,116 @@
-  // SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 
- pragma solidity ^0.8.24;
+pragma solidity ^0.8.24;
 
- contract Voting {
+contract Voting {
 
- struct Candidate {
+    struct Candidate {
+        string name;
+        uint256 voteCount;
+    }
 
- string name;
+    Candidate[] public candidates;
 
- uint256 voteCount;
+    // Stores whether each wallet has already voted
+    mapping(address => bool) public hasVoted;
 
- }
+    address public owner;
 
- Candidate[] public candidates;
+    bool public votingActive;
 
- mapping(address => bool) public hasVoted;
+    event VoteCast(
+        address indexed voter,
+        uint256 indexed candidateId
+    );
 
- address public owner;
+    event VotingEnded();
 
- bool public votingActive;
+    constructor() {
+        owner = msg.sender;
 
- event VoteCast(address indexed voter, uint256 indexed candidateId);
+        votingActive = true;
 
- event VotingEnded();
+        candidates.push(
+            Candidate("Candidate A", 0)
+        );
 
- constructor() {
+        candidates.push(
+            Candidate("Candidate B", 0)
+        );
 
- owner = msg.sender;
+        candidates.push(
+            Candidate("Candidate C", 0)
+        );
+    }
 
- votingActive = true;
+    function vote(uint256 candidateId) public {
 
- candidates.push(Candidate("Candidate A", 0));
+        require(
+            votingActive,
+            "Voting is not active"
+        );
 
- candidates.push(Candidate("Candidate B", 0));
+        require(
+            !hasVoted[msg.sender],
+            "You have already voted"
+        );
 
- candidates.push(Candidate("Candidate C", 0));
+        require(
+            candidateId < candidates.length,
+            "Invalid candidate"
+        );
 
- }
+        // Mark this wallet as having voted
+        hasVoted[msg.sender] = true;
 
- function vote(uint256 candidateId) public {
+        // Increase selected candidate's vote count
+        candidates[candidateId].voteCount++;
 
- require(votingActive, "Voting is not active");
+        emit VoteCast(
+            msg.sender,
+            candidateId
+        );
+    }
 
- require(!hasVoted[msg.sender], "You have already voted");
+    function endVoting() public {
 
- require(candidateId < candidates.length, "Invalid candidate");
+        require(
+            msg.sender == owner,
+            "Only owner can end voting"
+        );
 
- hasVoted[msg.sender] = true;
+        votingActive = false;
 
- candidates[candidateId].voteCount++;
+        emit VotingEnded();
+    }
 
- emit VoteCast(msg.sender, candidateId);
+    function getCandidateCount()
+        public
+        view
+        returns (uint256)
+    {
+        return candidates.length;
+    }
 
- }
+    function getCandidate(uint256 candidateId)
+        public
+        view
+        returns (
+            string memory name,
+            uint256 voteCount
+        )
+    {
+        require(
+            candidateId < candidates.length,
+            "Invalid candidate"
+        );
 
- function endVoting() public {
+        Candidate memory candidate =
+            candidates[candidateId];
 
- require(msg.sender == owner, "Only owner can end voting");
-
- votingActive = false;
-
- emit VotingEnded();
-
- }
-
- function getCandidateCount() public view returns (uint256) {
-
- return candidates.length;
-
- }
-
- function getCandidate(uint256 candidateId) public view returns (string memory name, uint256 voteCount) {
-
- require(candidateId < candidates.length, "Invalid candidate");
-
- Candidate memory candidate = candidates[candidateId];
-
- return (candidate.name, candidate.voteCount);
-
- }
-
- }
+        return (
+            candidate.name,
+            candidate.voteCount
+        );
+    }
+}

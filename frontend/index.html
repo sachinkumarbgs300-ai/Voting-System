@@ -2,15 +2,26 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Decentralized Voting System</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
     <!-- Ethers.js -->
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js">
+    </script>
+
 </head>
 
 <body>
@@ -18,16 +29,22 @@
     <div class="container">
 
         <!-- Header -->
+
         <header>
-            <h1>Decentralized Voting System</h1>
+
+            <h1>
+                Decentralized Voting System
+            </h1>
 
             <p class="subtitle">
                 Blockchain-Based Secure Voting Platform
             </p>
+
         </header>
 
 
-        <!-- Development Notice -->
+        <!-- Notice -->
+
         <section class="notice">
 
             <div class="notice-icon">
@@ -35,20 +52,27 @@
             </div>
 
             <div>
-                <h2 id="votingTitle">Voting System</h2>
+
+                <h2 id="votingTitle">
+                    Voting System
+                </h2>
 
                 <p id="votingMessage">
                     Connect your MetaMask wallet to access the voting system.
                 </p>
+
             </div>
 
         </section>
 
 
         <!-- Wallet Section -->
+
         <section class="wallet-section">
 
-            <h2>Wallet Connection</h2>
+            <h2>
+                Wallet Connection
+            </h2>
 
             <p id="walletStatus">
                 Wallet: Not Connected
@@ -62,6 +86,7 @@
 
 
         <!-- Candidates -->
+
         <section class="candidate-section">
 
             <h2 class="section-title">
@@ -70,24 +95,34 @@
 
             <div class="candidates">
 
+
                 <!-- Candidate A -->
+
                 <div class="candidate">
 
                     <div class="candidate-icon">
                         A
                     </div>
 
-                    <h2>Candidate A</h2>
+                    <h2>
+                        Candidate A
+                    </h2>
 
                     <p class="candidate-role">
                         Candidate
                     </p>
 
                     <div class="votes">
-                        Votes: <span id="votesA">0</span>
+                        Votes:
+                        <span id="votesA">0</span>
                     </div>
 
-                    <button class="vote-button" id="voteA" onclick="vote(0)" disabled>
+                    <button
+                        class="vote-button"
+                        id="voteA"
+                        data-candidate-id="0"
+                        disabled
+                    >
                         Vote
                     </button>
 
@@ -95,23 +130,32 @@
 
 
                 <!-- Candidate B -->
+
                 <div class="candidate">
 
                     <div class="candidate-icon">
                         B
                     </div>
 
-                    <h2>Candidate B</h2>
+                    <h2>
+                        Candidate B
+                    </h2>
 
                     <p class="candidate-role">
                         Candidate
                     </p>
 
                     <div class="votes">
-                        Votes: <span id="votesB">0</span>
+                        Votes:
+                        <span id="votesB">0</span>
                     </div>
 
-                    <button class="vote-button" id="voteB" onclick="vote(1)" disabled>
+                    <button
+                        class="vote-button"
+                        id="voteB"
+                        data-candidate-id="1"
+                        disabled
+                    >
                         Vote
                     </button>
 
@@ -119,23 +163,32 @@
 
 
                 <!-- Candidate C -->
+
                 <div class="candidate">
 
                     <div class="candidate-icon">
                         C
                     </div>
 
-                    <h2>Candidate C</h2>
+                    <h2>
+                        Candidate C
+                    </h2>
 
                     <p class="candidate-role">
                         Candidate
                     </p>
 
                     <div class="votes">
-                        Votes: <span id="votesC">0</span>
+                        Votes:
+                        <span id="votesC">0</span>
                     </div>
 
-                    <button class="vote-button" id="voteC" onclick="vote(2)" disabled>
+                    <button
+                        class="vote-button"
+                        id="voteC"
+                        data-candidate-id="2"
+                        disabled
+                    >
                         Vote
                     </button>
 
@@ -147,6 +200,7 @@
 
 
         <!-- System Status -->
+
         <section class="system-status">
 
             <h2>
@@ -155,14 +209,18 @@
 
             <div class="status-grid">
 
+
                 <div class="status-item">
 
                     <span class="status-label">
                         Smart Contract
                     </span>
 
-                    <span class="status-value" id="contractStatus">
-                        Deployed
+                    <span
+                        class="status-value"
+                        id="contractStatus"
+                    >
+                        Not Connected
                     </span>
 
                 </div>
@@ -174,7 +232,10 @@
                         Blockchain Network
                     </span>
 
-                    <span class="status-value" id="networkStatus">
+                    <span
+                        class="status-value"
+                        id="networkStatus"
+                    >
                         Not Connected
                     </span>
 
@@ -187,7 +248,10 @@
                         Wallet
                     </span>
 
-                    <span class="status-value" id="walletSystemStatus">
+                    <span
+                        class="status-value"
+                        id="walletSystemStatus"
+                    >
                         Not Connected
                     </span>
 
@@ -200,7 +264,10 @@
                         Voting
                     </span>
 
-                    <span class="status-value" id="votingStatus">
+                    <span
+                        class="status-value"
+                        id="votingStatus"
+                    >
                         Not Connected
                     </span>
 
@@ -212,6 +279,7 @@
 
 
         <!-- Footer -->
+
         <footer>
 
             <p>

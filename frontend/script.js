@@ -1,159 +1,446 @@
-// ==========================================
-// Decentralized Voting System
-// MetaMask + Voting Smart Contract
-// ==========================================
+// ============================================================
+// DECENTRALIZED VOTING SYSTEM
+// ============================================================
 
 
-// Deployed Voting contract address
+// ============================================================
+// CONFIGURATION
+// ============================================================
+
 const CONTRACT_ADDRESS =
     "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
+const HARDHAT_CHAIN_ID = "31337";
 
-// Voting smart contract ABI
+
+// ============================================================
+// CONTRACT ABI
+// ============================================================
+
 const CONTRACT_ABI = [
 
+    // Vote
     "function vote(uint256 candidateId) public",
 
+    // Candidate information
     "function getCandidateCount() public view returns (uint256)",
 
     "function getCandidate(uint256 candidateId) public view returns (string name, uint256 voteCount)",
 
+    // Wallet voting status
     "function hasVoted(address) public view returns (bool)",
 
+    // Voting status
     "function votingActive() public view returns (bool)"
 
 ];
 
 
-// Global variables
-let provider;
-let signer;
-let votingContract;
-let userAddress;
+// ============================================================
+// GLOBAL VARIABLES
+// ============================================================
+
+let provider = null;
+
+let signer = null;
+
+let votingContract = null;
+
+let userAddress = null;
 
 
-// ==========================================
-// Connect Wallet
-// ==========================================
+// ============================================================
+// DOM ELEMENTS
+// ============================================================
 
-async function connectWallet() {
+const connectWalletButton =
+    document.getElementById("connectWallet");
 
-    // Check if MetaMask is installed
-    if (typeof window.ethereum === "undefined") {
+const walletStatus =
+    document.getElementById("walletStatus");
 
-        alert("MetaMask is not installed. Please install MetaMask.");
+const walletSystemStatus =
+    document.getElementById("walletSystemStatus");
 
-        return;
+const networkStatus =
+    document.getElementById("networkStatus");
+
+const contractStatus =
+    document.getElementById("contractStatus");
+
+const votingStatus =
+    document.getElementById("votingStatus");
+
+const votingTitle =
+    document.getElementById("votingTitle");
+
+const votingMessage =
+    document.getElementById("votingMessage");
+
+const voteButtons =
+    document.querySelectorAll(".vote-button");
+
+
+// ============================================================
+// HELPER: SHORTEN WALLET ADDRESS
+// ============================================================
+
+function shortenAddress(address) {
+
+    if (!address) {
+        return "Not Connected";
+    }
+
+    return (
+        address.substring(0, 6) +
+        "..." +
+        address.substring(address.length - 4)
+    );
+}
+
+
+// ============================================================
+// HELPER: DISABLE ALL VOTE BUTTONS
+// ============================================================
+
+function disableVoteButtons() {
+
+    voteButtons.forEach(function (button) {
+
+        button.disabled = true;
+
+    });
+
+}
+
+
+// ============================================================
+// HELPER: ENABLE ALL VOTE BUTTONS
+// ============================================================
+
+function enableVoteButtons() {
+
+    voteButtons.forEach(function (button) {
+
+        button.disabled = false;
+
+    });
+
+}
+
+
+// ============================================================
+// RESET WALLET
+// ============================================================
+
+function resetWalletState() {
+
+    provider = null;
+
+    signer = null;
+
+    votingContract = null;
+
+    userAddress = null;
+
+
+    walletStatus.textContent =
+        "Wallet: Not Connected";
+
+    walletSystemStatus.textContent =
+        "Not Connected";
+
+    networkStatus.textContent =
+        "Not Connected";
+
+    contractStatus.textContent =
+        "Not Connected";
+
+    votingStatus.textContent =
+        "Not Connected";
+
+    votingTitle.textContent =
+        "Voting System";
+
+    votingMessage.textContent =
+        "Connect your MetaMask wallet to access the voting system.";
+
+
+    connectWalletButton.textContent =
+        "Connect Wallet";
+
+
+    disableVoteButtons();
+
+}
+
+
+// ============================================================
+// CHECK HARDHAT NETWORK
+// ============================================================
+
+async function checkNetwork() {
+
+    if (!provider) {
+        return false;
     }
 
 
+    const network =
+        await provider.getNetwork();
+
+
+    const chainId =
+        network.chainId.toString();
+
+
+    if (chainId !== HARDHAT_CHAIN_ID) {
+
+        networkStatus.textContent =
+            "Wrong Network";
+
+        contractStatus.textContent =
+            "Unavailable";
+
+        votingStatus.textContent =
+            "Wrong Network";
+
+        votingTitle.textContent =
+            "Wrong Network";
+
+        votingMessage.textContent =
+            "Please switch MetaMask to Hardhat Local.";
+
+        disableVoteButtons();
+
+        return false;
+    }
+
+
+    networkStatus.textContent =
+        "Hardhat Local";
+
+    return true;
+
+}
+
+
+// ============================================================
+// INITIALIZE WALLET
+// ============================================================
+
+async function initializeWallet(accounts) {
+
     try {
 
-        // Request wallet connection
-        await window.ethereum.request({
-            method: "eth_requestAccounts"
-        });
-
-
-        // Create ethers provider
-        provider = new ethers.BrowserProvider(window.ethereum);
-
-
-        // Get user's account
-        signer = await provider.getSigner();
-
-        userAddress = await signer.getAddress();
-
-
-        // Get blockchain network
-        const network = await provider.getNetwork();
-
-
-        // Hardhat Local Chain ID = 31337
-        if (network.chainId !== 31337n) {
+        if (!window.ethereum) {
 
             alert(
-                "Please switch MetaMask to Hardhat Local network."
+                "MetaMask is not installed. Please install MetaMask."
             );
 
+            return;
+
+        }
+
+
+        // ----------------------------------------------------
+        // No account
+        // ----------------------------------------------------
+
+        if (!accounts || accounts.length === 0) {
+
+            resetWalletState();
+
+            return;
+
+        }
+
+
+        // ----------------------------------------------------
+        // Create provider
+        // ----------------------------------------------------
+
+        provider =
+            new ethers.BrowserProvider(
+                window.ethereum
+            );
+
+
+        // ----------------------------------------------------
+        // IMPORTANT:
+        // Explicitly use the account supplied by MetaMask
+        // ----------------------------------------------------
+
+        const selectedAccount =
+            accounts[0];
+
+
+        // ----------------------------------------------------
+        // Create signer for current MetaMask account
+        // ----------------------------------------------------
+
+        signer =
+            await provider.getSigner(
+                selectedAccount
+            );
+
+
+        // ----------------------------------------------------
+        // Get exact wallet address
+        // ----------------------------------------------------
+
+        userAddress =
+            await signer.getAddress();
+
+
+        // ----------------------------------------------------
+        // Check network
+        // ----------------------------------------------------
+
+        const correctNetwork =
+            await checkNetwork();
+
+
+        if (!correctNetwork) {
             return;
         }
 
 
-        // Create contract instance
-        votingContract = new ethers.Contract(
-            CONTRACT_ADDRESS,
-            CONTRACT_ABI,
-            signer
-        );
+        // ----------------------------------------------------
+        // Create contract using CURRENT wallet signer
+        // ----------------------------------------------------
+
+        votingContract =
+            new ethers.Contract(
+                CONTRACT_ADDRESS,
+                CONTRACT_ABI,
+                signer
+            );
 
 
+        // ----------------------------------------------------
         // Update wallet information
-        document.getElementById("walletStatus").textContent =
-            "Wallet: " + userAddress;
+        // ----------------------------------------------------
+
+        walletStatus.textContent =
+            "Wallet: " +
+            shortenAddress(userAddress);
+
+        walletSystemStatus.textContent =
+            shortenAddress(userAddress);
 
 
-        document.getElementById("walletSystemStatus").textContent =
-            "Connected";
+        connectWalletButton.textContent =
+            "Wallet Connected";
 
 
-        document.getElementById("networkStatus").textContent =
-            "Hardhat Local";
+        contractStatus.textContent =
+            "Deployed";
 
 
-        document.getElementById("contractStatus").textContent =
-            "Connected";
+        // ----------------------------------------------------
+        // Load blockchain data
+        // ----------------------------------------------------
 
-
-        // Check voting status
-        await updateVotingStatus();
-
-
-        // Load current vote counts
         await loadVotes();
 
+        await updateVotingStatus();
 
-        console.log("Wallet connected:");
-        console.log(userAddress);
+        await checkUserVote();
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
-        console.error(error);
-
-        alert(
-            "Wallet connection failed: " +
-            (error.shortMessage || error.message)
+        console.error(
+            "Wallet initialization error:",
+            error
         );
+
+
+        votingMessage.textContent =
+            "Unable to connect wallet. Check MetaMask and try again.";
+
+        disableVoteButtons();
 
     }
 
 }
 
 
-// ==========================================
-// Check Voting Status
-// ==========================================
+// ============================================================
+// CONNECT WALLET BUTTON
+// ============================================================
+
+async function connectWallet() {
+
+    try {
+
+        if (!window.ethereum) {
+
+            alert(
+                "MetaMask is not installed."
+            );
+
+            return;
+
+        }
+
+
+        // Ask MetaMask for the currently selected account
+        const accounts =
+            await window.ethereum.request({
+                method: "eth_requestAccounts"
+            });
+
+
+        await initializeWallet(accounts);
+
+
+    } catch (error) {
+
+        console.error(
+            "Connect wallet error:",
+            error
+        );
+
+
+        if (error.code === 4001) {
+
+            votingMessage.textContent =
+                "Wallet connection was rejected.";
+
+        } else {
+
+            votingMessage.textContent =
+                "Unable to connect wallet.";
+
+        }
+
+    }
+
+}
+
+
+// ============================================================
+// UPDATE VOTING STATUS
+// ============================================================
 
 async function updateVotingStatus() {
 
     try {
 
+        if (!votingContract) {
+
+            disableVoteButtons();
+
+            return;
+
+        }
+
+
         const active =
             await votingContract.votingActive();
-
-
-        const votingStatus =
-            document.getElementById("votingStatus");
-
-
-        const votingTitle =
-            document.getElementById("votingTitle");
-
-
-        const votingMessage =
-            document.getElementById("votingMessage");
 
 
         if (active) {
@@ -162,114 +449,186 @@ async function updateVotingStatus() {
                 "Active";
 
             votingTitle.textContent =
-                "Voting is Open";
+                "Voting is Active";
 
             votingMessage.textContent =
-                "You can cast your vote using your connected wallet.";
+                "Select one candidate and cast your vote.";
 
-            enableVoteButtons();
-
-        }
-
-        else {
+        } else {
 
             votingStatus.textContent =
                 "Ended";
 
             votingTitle.textContent =
-                "Voting has Ended";
+                "Voting Ended";
 
             votingMessage.textContent =
-                "The voting process has been closed.";
+                "The voting process has ended.";
 
             disableVoteButtons();
 
         }
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
         console.error(
-            "Unable to check voting status:",
+            "Voting status error:",
             error
         );
 
+        votingStatus.textContent =
+            "Error";
+
+        disableVoteButtons();
+
     }
 
 }
 
 
-// ==========================================
-// Enable Vote Buttons
-// ==========================================
+// ============================================================
+// CHECK WHETHER CURRENT WALLET HAS VOTED
+// ============================================================
 
-function enableVoteButtons() {
+async function checkUserVote() {
 
-    document.getElementById("voteA").disabled = false;
+    try {
 
-    document.getElementById("voteB").disabled = false;
+        if (
+            !votingContract ||
+            !userAddress
+        ) {
 
-    document.getElementById("voteC").disabled = false;
+            disableVoteButtons();
+
+            return;
+
+        }
+
+
+        const active =
+            await votingContract.votingActive();
+
+
+        if (!active) {
+
+            disableVoteButtons();
+
+            return;
+
+        }
+
+
+        // IMPORTANT:
+        // Check hasVoted for CURRENT MetaMask account
+        const alreadyVoted =
+            await votingContract.hasVoted(
+                userAddress
+            );
+
+
+        if (alreadyVoted) {
+
+            disableVoteButtons();
+
+            votingMessage.textContent =
+                "This wallet has already voted.";
+
+            votingStatus.textContent =
+                "Already Voted";
+
+        } else {
+
+            enableVoteButtons();
+
+            votingMessage.textContent =
+                "Select one candidate and cast your vote.";
+
+            votingStatus.textContent =
+                "Active";
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Checking user vote error:",
+            error
+        );
+
+        disableVoteButtons();
+
+    }
 
 }
 
 
-// ==========================================
-// Disable Vote Buttons
-// ==========================================
-
-function disableVoteButtons() {
-
-    document.getElementById("voteA").disabled = true;
-
-    document.getElementById("voteB").disabled = true;
-
-    document.getElementById("voteC").disabled = true;
-
-}
-
-
-// ==========================================
-// Load Votes From Blockchain
-// ==========================================
+// ============================================================
+// LOAD VOTES FROM BLOCKCHAIN
+// ============================================================
 
 async function loadVotes() {
 
     try {
 
+        if (!votingContract) {
+            return;
+        }
+
+
+        // Candidate A = ID 0
         const candidateA =
             await votingContract.getCandidate(0);
 
+
+        // Candidate B = ID 1
         const candidateB =
             await votingContract.getCandidate(1);
 
+
+        // Candidate C = ID 2
         const candidateC =
             await votingContract.getCandidate(2);
 
 
-        document.getElementById("votesA").textContent =
+        // Update vote counts
+
+        document.getElementById("votesA")
+            .textContent =
             candidateA[1].toString();
 
 
-        document.getElementById("votesB").textContent =
+        document.getElementById("votesB")
+            .textContent =
             candidateB[1].toString();
 
 
-        document.getElementById("votesC").textContent =
+        document.getElementById("votesC")
+            .textContent =
             candidateC[1].toString();
 
 
         console.log(
-            "Votes loaded from blockchain."
+            "Votes loaded:",
+            {
+                candidateA:
+                    candidateA[1].toString(),
+
+                candidateB:
+                    candidateB[1].toString(),
+
+                candidateC:
+                    candidateC[1].toString()
+            }
         );
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
         console.error(
-            "Unable to load votes:",
+            "Loading votes error:",
             error
         );
 
@@ -278,95 +637,231 @@ async function loadVotes() {
 }
 
 
-// ==========================================
-// Cast Vote
-// ==========================================
+// ============================================================
+// VOTE FUNCTION
+// ============================================================
 
 async function vote(candidateId) {
 
-    if (!votingContract) {
-
-        alert(
-            "Please connect your MetaMask wallet first."
-        );
-
-        return;
-    }
-
-
     try {
 
-        // Check whether user has already voted
-        const alreadyVoted =
-            await votingContract.hasVoted(userAddress);
+        // ----------------------------------------------------
+        // Make sure wallet is connected
+        // ----------------------------------------------------
 
-
-        if (alreadyVoted) {
+        if (
+            !votingContract ||
+            !signer ||
+            !userAddress
+        ) {
 
             alert(
-                "You have already voted!"
+                "Please connect your MetaMask wallet first."
+            );
+
+            return;
+
+        }
+
+
+        // ----------------------------------------------------
+        // Validate candidate ID
+        // ----------------------------------------------------
+
+        if (
+            candidateId !== 0 &&
+            candidateId !== 1 &&
+            candidateId !== 2
+        ) {
+
+            alert(
+                "Invalid candidate."
+            );
+
+            return;
+
+        }
+
+
+        // ----------------------------------------------------
+        // Check voting status
+        // ----------------------------------------------------
+
+        const active =
+            await votingContract.votingActive();
+
+
+        if (!active) {
+
+            alert(
+                "Voting has ended."
             );
 
             disableVoteButtons();
 
             return;
+
         }
 
 
-        // Send vote transaction
-        const transaction =
-            await votingContract.vote(candidateId);
+        // ----------------------------------------------------
+        // Check current wallet
+        // ----------------------------------------------------
+
+        const alreadyVoted =
+            await votingContract.hasVoted(
+                userAddress
+            );
 
 
-        alert(
-            "Vote transaction submitted. Please wait..."
-        );
+        if (alreadyVoted) {
+
+            alert(
+                "This wallet has already voted."
+            );
+
+            disableVoteButtons();
+
+            return;
+
+        }
 
 
-        // Wait for blockchain confirmation
-        await transaction.wait();
+        // ----------------------------------------------------
+        // Disable buttons while transaction is pending
+        // ----------------------------------------------------
 
-
-        alert(
-            "Vote successfully recorded on blockchain!"
-        );
-
-
-        // Reload vote counts
-        await loadVotes();
-
-
-        // Disable voting because this wallet has voted
         disableVoteButtons();
 
 
-        console.log(
-            "Vote transaction:",
-            transaction.hash
-        );
+        // ----------------------------------------------------
+        // Get candidate name
+        // ----------------------------------------------------
 
-    }
-
-    catch (error) {
-
-        console.error(error);
+        let candidateName;
 
 
-        if (
-            error.code === "ACTION_REJECTED"
-        ) {
+        if (candidateId === 0) {
 
-            alert(
-                "You rejected the MetaMask transaction."
-            );
+            candidateName =
+                "Candidate A";
+
+        } else if (candidateId === 1) {
+
+            candidateName =
+                "Candidate B";
+
+        } else {
+
+            candidateName =
+                "Candidate C";
 
         }
 
-        else {
+
+        console.log(
+            "Voting for:",
+            candidateName
+        );
+
+        console.log(
+            "Candidate ID:",
+            candidateId
+        );
+
+        console.log(
+            "Wallet:",
+            userAddress
+        );
+
+
+        // ----------------------------------------------------
+        // Send transaction
+        // ----------------------------------------------------
+
+        const transaction =
+            await votingContract.vote(
+                candidateId
+            );
+
+
+        votingMessage.textContent =
+            "Transaction submitted. Waiting for confirmation...";
+
+
+        console.log(
+            "Transaction hash:",
+            transaction.hash
+        );
+
+
+        // ----------------------------------------------------
+        // Wait for blockchain confirmation
+        // ----------------------------------------------------
+
+        await transaction.wait();
+
+
+        // ----------------------------------------------------
+        // Reload blockchain data
+        // ----------------------------------------------------
+
+        await loadVotes();
+
+        await updateVotingStatus();
+
+        await checkUserVote();
+
+
+        alert(
+            "Vote successfully cast for " +
+            candidateName +
+            "!"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Voting error:",
+            error
+        );
+
+
+        // Re-check wallet state after error
+        await checkUserVote();
+
+
+        if (
+            error.code === 4001
+        ) {
+
+            alert(
+                "Transaction was rejected in MetaMask."
+            );
+
+        } else if (
+            error.reason
+        ) {
 
             alert(
                 "Voting failed: " +
-                (error.shortMessage || error.message)
+                error.reason
+            );
+
+        } else if (
+            error.shortMessage
+        ) {
+
+            alert(
+                "Voting failed: " +
+                error.shortMessage
+            );
+
+        } else {
+
+            alert(
+                "Voting failed. Check the browser console and MetaMask."
             );
 
         }
@@ -376,41 +871,198 @@ async function vote(candidateId) {
 }
 
 
-// ==========================================
-// Connect Wallet Button
-// ==========================================
+// ============================================================
+// CANDIDATE BUTTON EVENT LISTENERS
+// ============================================================
 
-document
-    .getElementById("connectWallet")
-    .addEventListener(
+voteButtons.forEach(function (button) {
+
+    button.addEventListener(
         "click",
-        connectWallet
+        function () {
+
+            const candidateId =
+                Number(
+                    button.dataset.candidateId
+                );
+
+
+            console.log(
+                "Clicked candidate ID:",
+                candidateId
+            );
+
+
+            vote(candidateId);
+
+        }
     );
 
+});
 
-// ==========================================
-// Detect Account Changes
-// ==========================================
+
+// ============================================================
+// CONNECT BUTTON EVENT LISTENER
+// ============================================================
+
+connectWalletButton.addEventListener(
+    "click",
+    connectWallet
+);
+
+
+// ============================================================
+// META MASK ACCOUNT CHANGE
+// ============================================================
 
 if (window.ethereum) {
 
     window.ethereum.on(
         "accountsChanged",
-        function () {
+        async function (accounts) {
 
-            location.reload();
+            console.log(
+                "MetaMask account changed:",
+                accounts
+            );
+
+
+            // No account connected
+            if (
+                !accounts ||
+                accounts.length === 0
+            ) {
+
+                resetWalletState();
+
+                return;
+
+            }
+
+
+            // ------------------------------------------------
+            // IMPORTANT:
+            // Do NOT call eth_requestAccounts here.
+            //
+            // MetaMask has already provided the new account.
+            // Rebuild the signer and contract using it.
+            // ------------------------------------------------
+
+            await initializeWallet(accounts);
 
         }
     );
 
 
+    // ========================================================
+    // META MASK NETWORK CHANGE
+    // ========================================================
+
     window.ethereum.on(
         "chainChanged",
-        function () {
+        async function () {
 
-            location.reload();
+            console.log(
+                "MetaMask network changed."
+            );
+
+
+            // Recreate provider after network change
+
+            provider =
+                new ethers.BrowserProvider(
+                    window.ethereum
+                );
+
+
+            const accounts =
+                await window.ethereum.request({
+                    method: "eth_accounts"
+                });
+
+
+            if (
+                accounts &&
+                accounts.length > 0
+            ) {
+
+                await initializeWallet(accounts);
+
+            } else {
+
+                resetWalletState();
+
+            }
 
         }
     );
 
 }
+
+
+// ============================================================
+// AUTO CONNECT ON PAGE LOAD
+// ============================================================
+
+window.addEventListener(
+    "load",
+    async function () {
+
+        try {
+
+            if (!window.ethereum) {
+
+                console.log(
+                    "MetaMask not detected."
+                );
+
+                return;
+
+            }
+
+
+            // ------------------------------------------------
+            // eth_accounts checks existing permission silently
+            // It does NOT open the MetaMask popup.
+            // ------------------------------------------------
+
+            const accounts =
+                await window.ethereum.request({
+                    method: "eth_accounts"
+                });
+
+
+            if (
+                accounts &&
+                accounts.length > 0
+            ) {
+
+                console.log(
+                    "Existing MetaMask connection found."
+                );
+
+
+                await initializeWallet(
+                    accounts
+                );
+
+            } else {
+
+                console.log(
+                    "No wallet connected to this website."
+                );
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Auto connection error:",
+                error
+            );
+
+        }
+
+    }
+);
