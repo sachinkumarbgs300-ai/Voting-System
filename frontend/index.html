@@ -1,83 +1,52 @@
-#npx hardhat run scripts/deploy-voting.ts --network localhost
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Decentralized Voting System</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 
-    <!-- Ethers.js -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js">
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"></script>
 </head>
 
 <body>
 
     <div class="container">
 
-        <!-- Header -->
-
         <header>
-
-            <h1>
-                Decentralized Voting System
-            </h1>
-
+            <h1>Decentralized Voting System</h1>
             <p class="subtitle">
                 Blockchain-Based Secure Voting Platform
             </p>
-
         </header>
 
-
-        <!-- Notice -->
+        <!-- Voting Notice -->
 
         <section class="notice">
 
-            <div class="notice-icon">
-                🔒
-            </div>
+            <div class="notice-icon">🔒</div>
 
             <div>
-
-                <h2 id="votingTitle">
-                    Voting System
-                </h2>
+                <h2 id="votingTitle">Voting System</h2>
 
                 <p id="votingMessage">
                     Connect your MetaMask wallet to access the voting system.
                 </p>
-
             </div>
 
         </section>
 
-
-        <!-- Wallet Section -->
+        <!-- Wallet Connection -->
 
         <section class="wallet-section">
 
-            <h2>
-                Wallet Connection
-            </h2>
+            <h2>Wallet Connection</h2>
 
-            <p id="walletStatus">
-                Wallet: Not Connected
-            </p>
+            <p id="walletStatus">Wallet: Not Connected</p>
 
             <button id="connectWallet">
                 Connect Wallet
@@ -85,33 +54,100 @@
 
         </section>
 
+        <!-- Voting Schedule -->
+
+        <section class="schedule-section">
+
+            <h2>Voting Schedule</h2>
+
+            <div class="schedule-status">
+
+                <p>Current Status</p>
+
+                <h3 id="scheduleStatus">
+                    Schedule Not Set
+                </h3>
+
+                <p id="countdown">
+                    Waiting for admin to set the schedule.
+                </p>
+
+            </div>
+
+            <div class="schedule-details">
+
+                <div>
+                    <span>Voting Start</span>
+                    <p id="scheduleStartDisplay">Not Set</p>
+                </div>
+
+                <div>
+                    <span>Voting End</span>
+                    <p id="scheduleEndDisplay">Not Set</p>
+                </div>
+
+            </div>
+
+            <!-- Admin Only -->
+
+            <div id="adminPanel" class="admin-panel" hidden>
+
+                <h3>Admin Controls</h3>
+
+                <p class="admin-description">
+                    Set the date and time for the voting process.
+                </p>
+
+                <label for="startDateTime">
+                    Voting Start Date and Time
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="startDateTime"
+                    required
+                >
+
+                <label for="endDateTime">
+                    Voting End Date and Time
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="endDateTime"
+                    required
+                >
+
+                <button id="setScheduleButton">
+                    Set Voting Schedule
+                </button>
+
+                <p id="scheduleMessage"></p>
+
+            </div>
+
+            <p class="timezone-note">
+                Schedule times are entered in your computer's local timezone.
+                The blockchain stores them as Unix timestamps.
+            </p>
+
+        </section>
 
         <!-- Candidates -->
 
         <section class="candidate-section">
 
-            <h2 class="section-title">
-                Candidates
-            </h2>
+            <h2 class="section-title">Candidates</h2>
 
             <div class="candidates">
 
-
-                <!-- Candidate A -->
-
                 <div class="candidate">
 
-                    <div class="candidate-icon">
-                        A
-                    </div>
+                    <div class="candidate-icon">A</div>
 
-                    <h2>
-                        Candidate A
-                    </h2>
+                    <h2>Candidate A</h2>
 
-                    <p class="candidate-role">
-                        Candidate
-                    </p>
+                    <p class="candidate-role">Candidate</p>
 
                     <div class="votes">
                         Votes:
@@ -129,22 +165,13 @@
 
                 </div>
 
-
-                <!-- Candidate B -->
-
                 <div class="candidate">
 
-                    <div class="candidate-icon">
-                        B
-                    </div>
+                    <div class="candidate-icon">B</div>
 
-                    <h2>
-                        Candidate B
-                    </h2>
+                    <h2>Candidate B</h2>
 
-                    <p class="candidate-role">
-                        Candidate
-                    </p>
+                    <p class="candidate-role">Candidate</p>
 
                     <div class="votes">
                         Votes:
@@ -162,22 +189,13 @@
 
                 </div>
 
-
-                <!-- Candidate C -->
-
                 <div class="candidate">
 
-                    <div class="candidate-icon">
-                        C
-                    </div>
+                    <div class="candidate-icon">C</div>
 
-                    <h2>
-                        Candidate C
-                    </h2>
+                    <h2>Candidate C</h2>
 
-                    <p class="candidate-role">
-                        Candidate
-                    </p>
+                    <p class="candidate-role">Candidate</p>
 
                     <div class="votes">
                         Votes:
@@ -199,93 +217,49 @@
 
         </section>
 
-
         <!-- System Status -->
 
         <section class="system-status">
 
-            <h2>
-                System Status
-            </h2>
+            <h2>System Status</h2>
 
             <div class="status-grid">
 
-
                 <div class="status-item">
-
-                    <span class="status-label">
-                        Smart Contract
-                    </span>
-
-                    <span
-                        class="status-value"
-                        id="contractStatus"
-                    >
+                    <span class="status-label">Smart Contract</span>
+                    <span class="status-value" id="contractStatus">
                         Not Connected
                     </span>
-
                 </div>
 
-
                 <div class="status-item">
-
-                    <span class="status-label">
-                        Blockchain Network
-                    </span>
-
-                    <span
-                        class="status-value"
-                        id="networkStatus"
-                    >
+                    <span class="status-label">Blockchain Network</span>
+                    <span class="status-value" id="networkStatus">
                         Not Connected
                     </span>
-
                 </div>
 
-
                 <div class="status-item">
-
-                    <span class="status-label">
-                        Wallet
-                    </span>
-
-                    <span
-                        class="status-value"
-                        id="walletSystemStatus"
-                    >
+                    <span class="status-label">Wallet</span>
+                    <span class="status-value" id="walletSystemStatus">
                         Not Connected
                     </span>
-
                 </div>
 
-
                 <div class="status-item">
-
-                    <span class="status-label">
-                        Voting
-                    </span>
-
-                    <span
-                        class="status-value"
-                        id="votingStatus"
-                    >
+                    <span class="status-label">Voting</span>
+                    <span class="status-value" id="votingStatus">
                         Not Connected
                     </span>
-
                 </div>
 
             </div>
 
         </section>
 
-
-        <!-- Footer -->
-
         <footer>
 
-            <p>
-                Decentralized Voting System
-            </p>
+            <p>Decentralized Voting System</p>
 
             <p class="footer-subtitle">
                 Blockchain Integration Active
@@ -294,7 +268,6 @@
         </footer>
 
     </div>
-
 
     <script src="script.js"></script>
 

@@ -1,3 +1,4 @@
+
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.24;
@@ -11,24 +12,43 @@ contract Voting {
 
     Candidate[] public candidates;
 
-    // Stores whether each wallet has already voted
+    // One vote per wallet address
     mapping(address => bool) public hasVoted;
 
     address public owner;
 
-    bool public votingActive;
+    // Voting schedule
+    uint256 public votingStartTime;
+    uint256 public votingEndTime;
+
+    bool public scheduleSet;
+    bool public manuallyEnded;
 
     event VoteCast(
         address indexed voter,
         uint256 indexed candidateId
     );
 
+    event VotingScheduleSet(
+        uint256 startTime,
+        uint256 endTime
+    );
+
     event VotingEnded();
+
+    modifier onlyOwner() {
+        require(
+            msg.sender == owner,
+            "Only owner can perform this action"
+        );
+        _;
+    }
 
     constructor() {
         owner = msg.sender;
 
-        votingActive = true;
+        scheduleSet = false;
+        manuallyEnded = false;
 
         candidates.push(
             Candidate("Candidate A", 0)
@@ -43,11 +63,70 @@ contract Voting {
         );
     }
 
+    // Admin sets or changes the schedule before voting starts.
+    function setVotingSchedule(
+        uint256 startTime,
+        uint256 endTime
+    ) external onlyOwner {
+
+        require(
+            !scheduleSet || block.timestamp < votingStartTime,
+            "Schedule cannot be changed after voting starts"
+        );
+
+        require(
+            startTime > block.timestamp,
+            "Start time must be in the future"
+        );
+
+        require(
+            endTime > startTime,
+            "End time must be after start time"
+        );
+
+        votingStartTime = startTime;
+        votingEndTime = endTime;
+
+        scheduleSet = true;
+        manuallyEnded = false;
+
+        emit VotingScheduleSet(
+            startTime,
+            endTime
+        );
+    }
+
+    // Automatically checks whether voting is currently active.
+    function votingActive() public view returns (bool) {
+
+        if (!scheduleSet || manuallyEnded) {
+            return false;
+        }
+
+        return (
+            block.timestamp >= votingStartTime &&
+            block.timestamp <= votingEndTime
+        );
+    }
+
+    // Returns whether the scheduled voting period has ended.
+    function votingHasEnded() public view returns (bool) {
+
+        return (
+            manuallyEnded ||
+            (
+                scheduleSet &&
+                block.timestamp > votingEndTime
+            )
+        );
+    }
+
+    // Cast vote
     function vote(uint256 candidateId) public {
 
         require(
-            votingActive,
-            "Voting is not active"
+            votingActive(),
+            "Voting is not active or outside schedule"
         );
 
         require(
@@ -60,10 +139,8 @@ contract Voting {
             "Invalid candidate"
         );
 
-        // Mark this wallet as having voted
         hasVoted[msg.sender] = true;
 
-        // Increase selected candidate's vote count
         candidates[candidateId].voteCount++;
 
         emit VoteCast(
@@ -72,14 +149,15 @@ contract Voting {
         );
     }
 
-    function endVoting() public {
+    // Admin can still end voting early if necessary.
+    function endVoting() external onlyOwner {
 
         require(
-            msg.sender == owner,
-            "Only owner can end voting"
+            votingActive(),
+            "Voting is not active"
         );
 
-        votingActive = false;
+        manuallyEnded = true;
 
         emit VotingEnded();
     }

@@ -6,27 +6,39 @@ import type { TypedContractEvent, TypedDeferredTopicFilter, TypedEventLog, Typed
   
 
   export interface VotingInterface extends Interface {
-    getFunction(nameOrSignature: "candidates" | "endVoting" | "getCandidate" | "getCandidateCount" | "hasVoted" | "owner" | "vote" | "votingActive"): FunctionFragment;
+    getFunction(nameOrSignature: "candidates" | "endVoting" | "getCandidate" | "getCandidateCount" | "hasVoted" | "manuallyEnded" | "owner" | "scheduleSet" | "setVotingSchedule" | "vote" | "votingActive" | "votingEndTime" | "votingHasEnded" | "votingStartTime"): FunctionFragment;
 
-    getEvent(nameOrSignatureOrTopic: "VoteCast" | "VotingEnded"): EventFragment;
+    getEvent(nameOrSignatureOrTopic: "VoteCast" | "VotingEnded" | "VotingScheduleSet"): EventFragment;
 
     encodeFunctionData(functionFragment: 'candidates', values: [BigNumberish]): string;
 encodeFunctionData(functionFragment: 'endVoting', values?: undefined): string;
 encodeFunctionData(functionFragment: 'getCandidate', values: [BigNumberish]): string;
 encodeFunctionData(functionFragment: 'getCandidateCount', values?: undefined): string;
 encodeFunctionData(functionFragment: 'hasVoted', values: [AddressLike]): string;
+encodeFunctionData(functionFragment: 'manuallyEnded', values?: undefined): string;
 encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
+encodeFunctionData(functionFragment: 'scheduleSet', values?: undefined): string;
+encodeFunctionData(functionFragment: 'setVotingSchedule', values: [BigNumberish, BigNumberish]): string;
 encodeFunctionData(functionFragment: 'vote', values: [BigNumberish]): string;
 encodeFunctionData(functionFragment: 'votingActive', values?: undefined): string;
+encodeFunctionData(functionFragment: 'votingEndTime', values?: undefined): string;
+encodeFunctionData(functionFragment: 'votingHasEnded', values?: undefined): string;
+encodeFunctionData(functionFragment: 'votingStartTime', values?: undefined): string;
 
     decodeFunctionResult(functionFragment: 'candidates', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'endVoting', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'getCandidate', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'getCandidateCount', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'hasVoted', data: BytesLike): Result;
+decodeFunctionResult(functionFragment: 'manuallyEnded', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+decodeFunctionResult(functionFragment: 'scheduleSet', data: BytesLike): Result;
+decodeFunctionResult(functionFragment: 'setVotingSchedule', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'vote', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'votingActive', data: BytesLike): Result;
+decodeFunctionResult(functionFragment: 'votingEndTime', data: BytesLike): Result;
+decodeFunctionResult(functionFragment: 'votingHasEnded', data: BytesLike): Result;
+decodeFunctionResult(functionFragment: 'votingStartTime', data: BytesLike): Result;
   }
 
   
@@ -46,6 +58,18 @@ decodeFunctionResult(functionFragment: 'votingActive', data: BytesLike): Result;
       export type InputTuple = [];
       export type OutputTuple = [];
       export interface OutputObject {};
+      export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>
+      export type Filter = TypedDeferredTopicFilter<Event>
+      export type Log = TypedEventLog<Event>
+      export type LogDescription = TypedLogDescription<Event>
+    }
+
+  
+
+    export namespace VotingScheduleSetEvent {
+      export type InputTuple = [startTime: BigNumberish, endTime: BigNumberish];
+      export type OutputTuple = [startTime: bigint, endTime: bigint];
+      export interface OutputObject {startTime: bigint, endTime: bigint };
       export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>
       export type Filter = TypedDeferredTopicFilter<Event>
       export type Log = TypedEventLog<Event>
@@ -128,10 +152,34 @@ decodeFunctionResult(functionFragment: 'votingActive', data: BytesLike): Result;
     
 
     
+    manuallyEnded: TypedContractMethod<
+      [],
+      [boolean],
+      'view'
+    >
+    
+
+    
     owner: TypedContractMethod<
       [],
       [string],
       'view'
+    >
+    
+
+    
+    scheduleSet: TypedContractMethod<
+      [],
+      [boolean],
+      'view'
+    >
+    
+
+    
+    setVotingSchedule: TypedContractMethod<
+      [startTime: BigNumberish, endTime: BigNumberish, ],
+      [void],
+      'nonpayable'
     >
     
 
@@ -147,6 +195,30 @@ decodeFunctionResult(functionFragment: 'votingActive', data: BytesLike): Result;
     votingActive: TypedContractMethod<
       [],
       [boolean],
+      'view'
+    >
+    
+
+    
+    votingEndTime: TypedContractMethod<
+      [],
+      [bigint],
+      'view'
+    >
+    
+
+    
+    votingHasEnded: TypedContractMethod<
+      [],
+      [boolean],
+      'view'
+    >
+    
+
+    
+    votingStartTime: TypedContractMethod<
+      [],
+      [bigint],
       'view'
     >
     
@@ -179,10 +251,25 @@ getFunction(nameOrSignature: 'hasVoted'): TypedContractMethod<
       [boolean],
       'view'
     >;
+getFunction(nameOrSignature: 'manuallyEnded'): TypedContractMethod<
+      [],
+      [boolean],
+      'view'
+    >;
 getFunction(nameOrSignature: 'owner'): TypedContractMethod<
       [],
       [string],
       'view'
+    >;
+getFunction(nameOrSignature: 'scheduleSet'): TypedContractMethod<
+      [],
+      [boolean],
+      'view'
+    >;
+getFunction(nameOrSignature: 'setVotingSchedule'): TypedContractMethod<
+      [startTime: BigNumberish, endTime: BigNumberish, ],
+      [void],
+      'nonpayable'
     >;
 getFunction(nameOrSignature: 'vote'): TypedContractMethod<
       [candidateId: BigNumberish, ],
@@ -194,9 +281,25 @@ getFunction(nameOrSignature: 'votingActive'): TypedContractMethod<
       [boolean],
       'view'
     >;
+getFunction(nameOrSignature: 'votingEndTime'): TypedContractMethod<
+      [],
+      [bigint],
+      'view'
+    >;
+getFunction(nameOrSignature: 'votingHasEnded'): TypedContractMethod<
+      [],
+      [boolean],
+      'view'
+    >;
+getFunction(nameOrSignature: 'votingStartTime'): TypedContractMethod<
+      [],
+      [bigint],
+      'view'
+    >;
 
     getEvent(key: 'VoteCast'): TypedContractEvent<VoteCastEvent.InputTuple, VoteCastEvent.OutputTuple, VoteCastEvent.OutputObject>;
 getEvent(key: 'VotingEnded'): TypedContractEvent<VotingEndedEvent.InputTuple, VotingEndedEvent.OutputTuple, VotingEndedEvent.OutputObject>;
+getEvent(key: 'VotingScheduleSet'): TypedContractEvent<VotingScheduleSetEvent.InputTuple, VotingScheduleSetEvent.OutputTuple, VotingScheduleSetEvent.OutputObject>;
 
     filters: {
       
@@ -206,6 +309,10 @@ getEvent(key: 'VotingEnded'): TypedContractEvent<VotingEndedEvent.InputTuple, Vo
 
       'VotingEnded()': TypedContractEvent<VotingEndedEvent.InputTuple, VotingEndedEvent.OutputTuple, VotingEndedEvent.OutputObject>;
       VotingEnded: TypedContractEvent<VotingEndedEvent.InputTuple, VotingEndedEvent.OutputTuple, VotingEndedEvent.OutputObject>;
+    
+
+      'VotingScheduleSet(uint256,uint256)': TypedContractEvent<VotingScheduleSetEvent.InputTuple, VotingScheduleSetEvent.OutputTuple, VotingScheduleSetEvent.OutputObject>;
+      VotingScheduleSet: TypedContractEvent<VotingScheduleSetEvent.InputTuple, VotingScheduleSetEvent.OutputTuple, VotingScheduleSetEvent.OutputObject>;
     
     };
   }
