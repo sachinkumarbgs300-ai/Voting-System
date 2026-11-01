@@ -4,5 +4,5 @@
 export type { Counter } from './Counter.js';
 export type { Voting } from './Voting.js';
 export * as factories from './factories/index.js';
-export { Counter__factory } from './factories/Counter__factory.js';
 export { Voting__factory } from './factories/Voting__factory.js';
+export { Counter__factory } from './factories/Counter__factory.js';

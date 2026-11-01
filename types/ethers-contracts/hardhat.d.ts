@@ -10,17 +10,17 @@ import * as Contracts from "./index.js";
 
 declare module "@nomicfoundation/hardhat-ethers/types" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
-  getContractFactory(name: 'Counter', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Counter__factory>
-getContractFactory(name: 'Voting', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Voting__factory>
+  getContractFactory(name: 'Voting', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Voting__factory>
+getContractFactory(name: 'Counter', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Counter__factory>
 
-  getContractAt(name: 'Counter', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.Counter>
-getContractAt(name: 'Voting', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.Voting>
+  getContractAt(name: 'Voting', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.Voting>
+getContractAt(name: 'Counter', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.Counter>
 
-  deployContract(name: 'Counter', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.Counter>
-deployContract(name: 'Voting', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.Voting>
+  deployContract(name: 'Voting', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.Voting>
+deployContract(name: 'Counter', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.Counter>
 
-  deployContract(name: 'Counter', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.Counter>
-deployContract(name: 'Voting', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.Voting>
+  deployContract(name: 'Voting', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.Voting>
+deployContract(name: 'Counter', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.Counter>
 
     // default types
     getContractFactory(

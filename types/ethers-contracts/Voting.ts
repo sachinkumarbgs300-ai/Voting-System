@@ -6,11 +6,12 @@ import type { TypedContractEvent, TypedDeferredTopicFilter, TypedEventLog, Typed
   
 
   export interface VotingInterface extends Interface {
-    getFunction(nameOrSignature: "candidates" | "endVoting" | "getCandidate" | "getCandidateCount" | "hasVoted" | "manuallyEnded" | "owner" | "scheduleSet" | "setVotingSchedule" | "vote" | "votingActive" | "votingEndTime" | "votingHasEnded" | "votingStartTime"): FunctionFragment;
+    getFunction(nameOrSignature: "addCandidate" | "candidates" | "endVoting" | "getCandidate" | "getCandidateCount" | "hasVoted" | "manuallyEnded" | "owner" | "scheduleSet" | "setVotingSchedule" | "vote" | "votingActive" | "votingEndTime" | "votingHasEnded" | "votingStartTime"): FunctionFragment;
 
-    getEvent(nameOrSignatureOrTopic: "VoteCast" | "VotingEnded" | "VotingScheduleSet"): EventFragment;
+    getEvent(nameOrSignatureOrTopic: "CandidateAdded" | "VoteCast" | "VotingEnded" | "VotingScheduleSet"): EventFragment;
 
-    encodeFunctionData(functionFragment: 'candidates', values: [BigNumberish]): string;
+    encodeFunctionData(functionFragment: 'addCandidate', values: [string]): string;
+encodeFunctionData(functionFragment: 'candidates', values: [BigNumberish]): string;
 encodeFunctionData(functionFragment: 'endVoting', values?: undefined): string;
 encodeFunctionData(functionFragment: 'getCandidate', values: [BigNumberish]): string;
 encodeFunctionData(functionFragment: 'getCandidateCount', values?: undefined): string;
@@ -25,7 +26,8 @@ encodeFunctionData(functionFragment: 'votingEndTime', values?: undefined): strin
 encodeFunctionData(functionFragment: 'votingHasEnded', values?: undefined): string;
 encodeFunctionData(functionFragment: 'votingStartTime', values?: undefined): string;
 
-    decodeFunctionResult(functionFragment: 'candidates', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'addCandidate', data: BytesLike): Result;
+decodeFunctionResult(functionFragment: 'candidates', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'endVoting', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'getCandidate', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'getCandidateCount', data: BytesLike): Result;
@@ -42,6 +44,18 @@ decodeFunctionResult(functionFragment: 'votingStartTime', data: BytesLike): Resu
   }
 
   
+    export namespace CandidateAddedEvent {
+      export type InputTuple = [candidateId: BigNumberish, name: string];
+      export type OutputTuple = [candidateId: bigint, name: string];
+      export interface OutputObject {candidateId: bigint, name: string };
+      export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>
+      export type Filter = TypedDeferredTopicFilter<Event>
+      export type Log = TypedEventLog<Event>
+      export type LogDescription = TypedLogDescription<Event>
+    }
+
+  
+
     export namespace VoteCastEvent {
       export type InputTuple = [voter: AddressLike, candidateId: BigNumberish];
       export type OutputTuple = [voter: string, candidateId: bigint];
@@ -111,6 +125,14 @@ decodeFunctionResult(functionFragment: 'votingStartTime', data: BytesLike): Resu
 
 
     
+    
+    addCandidate: TypedContractMethod<
+      [name: string, ],
+      [void],
+      'nonpayable'
+    >
+    
+
     
     candidates: TypedContractMethod<
       [arg0: BigNumberish, ],
@@ -226,7 +248,12 @@ decodeFunctionResult(functionFragment: 'votingStartTime', data: BytesLike): Resu
 
     getFunction<T extends ContractMethod = ContractMethod>(key: string | FunctionFragment): T;
 
-    getFunction(nameOrSignature: 'candidates'): TypedContractMethod<
+    getFunction(nameOrSignature: 'addCandidate'): TypedContractMethod<
+      [name: string, ],
+      [void],
+      'nonpayable'
+    >;
+getFunction(nameOrSignature: 'candidates'): TypedContractMethod<
       [arg0: BigNumberish, ],
       [[string, bigint] & {name: string, voteCount: bigint }],
       'view'
@@ -297,12 +324,17 @@ getFunction(nameOrSignature: 'votingStartTime'): TypedContractMethod<
       'view'
     >;
 
-    getEvent(key: 'VoteCast'): TypedContractEvent<VoteCastEvent.InputTuple, VoteCastEvent.OutputTuple, VoteCastEvent.OutputObject>;
+    getEvent(key: 'CandidateAdded'): TypedContractEvent<CandidateAddedEvent.InputTuple, CandidateAddedEvent.OutputTuple, CandidateAddedEvent.OutputObject>;
+getEvent(key: 'VoteCast'): TypedContractEvent<VoteCastEvent.InputTuple, VoteCastEvent.OutputTuple, VoteCastEvent.OutputObject>;
 getEvent(key: 'VotingEnded'): TypedContractEvent<VotingEndedEvent.InputTuple, VotingEndedEvent.OutputTuple, VotingEndedEvent.OutputObject>;
 getEvent(key: 'VotingScheduleSet'): TypedContractEvent<VotingScheduleSetEvent.InputTuple, VotingScheduleSetEvent.OutputTuple, VotingScheduleSetEvent.OutputObject>;
 
     filters: {
       
+      'CandidateAdded(uint256,string)': TypedContractEvent<CandidateAddedEvent.InputTuple, CandidateAddedEvent.OutputTuple, CandidateAddedEvent.OutputObject>;
+      CandidateAdded: TypedContractEvent<CandidateAddedEvent.InputTuple, CandidateAddedEvent.OutputTuple, CandidateAddedEvent.OutputObject>;
+    
+
       'VoteCast(address,uint256)': TypedContractEvent<VoteCastEvent.InputTuple, VoteCastEvent.OutputTuple, VoteCastEvent.OutputObject>;
       VoteCast: TypedContractEvent<VoteCastEvent.InputTuple, VoteCastEvent.OutputTuple, VoteCastEvent.OutputObject>;
     

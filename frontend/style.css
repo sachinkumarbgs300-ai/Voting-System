@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -7,415 +6,131 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: radial-gradient(
-        circle at top,
-        #1e3a5f 0%,
-        #0f172a 45%,
-        #020617 100%
-    );
+    background: radial-gradient(circle at top, #1e3a5f 0%, #0f172a 45%, #020617 100%);
     color: #ffffff;
     min-height: 100vh;
     padding: 40px 20px;
 }
 
-.container {
-    width: 100%;
-    max-width: 1100px;
-    margin: auto;
-}
-
-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-header h1 {
-    font-size: 42px;
-    margin-bottom: 12px;
-    letter-spacing: 1px;
-}
-
-.subtitle {
-    color: #94a3b8;
-    font-size: 17px;
-}
-
-/* Notice */
+.container { width: 100%; max-width: 1100px; margin: auto; }
+header { text-align: center; margin-bottom: 40px; }
+header h1 { font-size: 42px; margin-bottom: 12px; letter-spacing: 1px; }
+.subtitle { color: #94a3b8; font-size: 17px; }
 
 .notice {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: rgba(120, 85, 10, 0.25);
-    border: 1px solid #a16207;
-    border-radius: 14px;
-    padding: 25px;
-    margin-bottom: 30px;
+    display: flex; align-items: center; gap: 20px;
+    background: rgba(120, 85, 10, 0.25); border: 1px solid #a16207;
+    border-radius: 14px; padding: 25px; margin-bottom: 30px;
 }
-
-.notice-icon {
-    font-size: 35px;
-}
-
-.notice h2 {
-    color: #facc15;
-    margin-bottom: 8px;
-}
-
-.notice p {
-    color: #cbd5e1;
-    line-height: 1.6;
-}
-
-/* Wallet */
+.notice-icon { font-size: 35px; }
+.notice h2 { color: #facc15; margin-bottom: 8px; }
+.notice p { color: #cbd5e1; line-height: 1.6; }
 
 .wallet-section {
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid #334155;
-    border-radius: 14px;
-    padding: 25px;
-    margin-bottom: 30px;
-    text-align: center;
+    background: rgba(15, 23, 42, 0.8); border: 1px solid #334155;
+    border-radius: 14px; padding: 25px; margin-bottom: 30px; text-align: center;
 }
-
-.wallet-section h2 {
-    margin-bottom: 12px;
-}
-
-#walletStatus {
-    color: #94a3b8;
-    margin-bottom: 18px;
-}
-
+.wallet-section h2 { margin-bottom: 12px; }
+#walletStatus { color: #94a3b8; margin-bottom: 18px; }
 #connectWallet {
-    padding: 12px 25px;
-    background: #2563eb;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.2s;
+    padding: 12px 25px; background: #2563eb; border: none; border-radius: 8px;
+    color: white; font-size: 15px; cursor: pointer; transition: 0.2s;
 }
-
-#connectWallet:hover {
-    background: #1d4ed8;
-}
-
-/* Voting Schedule */
+#connectWallet:hover { background: #1d4ed8; }
 
 .schedule-section {
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid #334155;
-    border-radius: 14px;
-    padding: 28px;
-    margin-bottom: 35px;
+    background: rgba(15, 23, 42, 0.85); border: 1px solid #334155;
+    border-radius: 14px; padding: 28px; margin-bottom: 35px;
 }
-
-.schedule-section > h2 {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.schedule-status {
-    text-align: center;
-    background: #111827;
-    padding: 22px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-}
-
-.schedule-status p {
-    color: #94a3b8;
-    margin-bottom: 8px;
-}
-
-.schedule-status h3 {
-    font-size: 24px;
-    color: #facc15;
-    margin-bottom: 10px;
-}
-
-#countdown {
-    color: #cbd5e1;
-    line-height: 1.5;
-}
-
-.schedule-details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.schedule-details > div {
-    background: #111827;
-    padding: 18px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.schedule-details span {
-    display: block;
-    color: #94a3b8;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
-
-.schedule-details p {
-    color: #e2e8f0;
-    font-weight: bold;
-    line-height: 1.5;
-}
-
-/* Admin Controls */
+.schedule-section > h2 { text-align: center; margin-bottom: 25px; }
+.schedule-status { text-align: center; background: #111827; padding: 22px; border-radius: 12px; margin-bottom: 20px; }
+.schedule-status p { color: #94a3b8; margin-bottom: 8px; }
+.schedule-status h3 { font-size: 24px; color: #facc15; margin-bottom: 10px; }
+#countdown { color: #cbd5e1; line-height: 1.5; }
+.schedule-details { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+.schedule-details > div { background: #111827; padding: 18px; border-radius: 10px; text-align: center; }
+.schedule-details span { display: block; color: #94a3b8; margin-bottom: 10px; font-size: 14px; }
+.schedule-details p { color: #e2e8f0; font-weight: bold; line-height: 1.5; }
 
 .admin-panel {
-    background: rgba(30, 64, 175, 0.13);
-    border: 1px solid #1d4ed8;
-    border-radius: 12px;
-    padding: 22px;
-    margin-top: 20px;
+    background: rgba(30, 64, 175, 0.13); border: 1px solid #1d4ed8;
+    border-radius: 12px; padding: 22px; margin-top: 20px;
 }
-
-.admin-panel h3 {
-    color: #60a5fa;
-    margin-bottom: 10px;
-}
-
-.admin-description {
-    color: #94a3b8;
-    margin-bottom: 20px;
-    line-height: 1.5;
-}
-
-.admin-panel label {
-    display: block;
-    margin: 16px 0 8px;
-    color: #cbd5e1;
-}
-
+.admin-panel > h3 { color: #60a5fa; margin-bottom: 10px; }
+.admin-description { color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
+.admin-subheading { color: #bfdbfe; margin: 12px 0 8px; font-size: 18px; }
+.admin-panel label { display: block; margin: 16px 0 8px; color: #cbd5e1; }
 .admin-panel input {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #475569;
-    border-radius: 8px;
-    background: #0f172a;
-    color: white;
-    font-size: 15px;
+    display: block; width: 100%; padding: 12px; border: 1px solid #475569;
+    border-radius: 8px; background: #0f172a; color: white; font-size: 15px;
 }
-
-.admin-panel input:focus {
-    outline: 2px solid #2563eb;
+.admin-panel input:focus { outline: 2px solid #2563eb; }
+#setScheduleButton, #addCandidateButton {
+    width: 100%; padding: 13px; margin-top: 22px; background: #2563eb;
+    border: none; border-radius: 8px; color: white; font-size: 15px; cursor: pointer;
 }
+#setScheduleButton:hover, #addCandidateButton:hover { background: #1d4ed8; }
+#setScheduleButton:disabled, #addCandidateButton:disabled { opacity: 0.6; cursor: not-allowed; }
+.feedback-message { margin-top: 15px; color: #93c5fd; line-height: 1.5; overflow-wrap: anywhere; }
+.candidate-management { border-top: 1px solid #334f86; margin-top: 28px; padding-top: 20px; }
+.admin-candidate-list-wrap { margin-top: 22px; background: rgba(15, 23, 42, 0.65); padding: 16px; border-radius: 10px; }
+.admin-candidate-list-wrap h4 { color: #cbd5e1; margin-bottom: 12px; }
+.admin-candidate-list { padding-left: 24px; color: #cbd5e1; line-height: 1.9; }
+.admin-candidate-list li { padding-left: 4px; overflow-wrap: anywhere; }
+.timezone-note { color: #64748b; font-size: 12px; line-height: 1.5; margin-top: 20px; }
 
-#setScheduleButton {
-    width: 100%;
-    padding: 13px;
-    margin-top: 22px;
-    background: #2563eb;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 15px;
-    cursor: pointer;
-}
-
-#setScheduleButton:hover {
-    background: #1d4ed8;
-}
-
-#setScheduleButton:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-#scheduleMessage {
-    margin-top: 15px;
-    color: #93c5fd;
-    line-height: 1.5;
-}
-
-.timezone-note {
-    color: #64748b;
-    font-size: 12px;
-    line-height: 1.5;
-    margin-top: 20px;
-}
-
-/* Candidates */
-
-.candidate-section {
-    margin-bottom: 35px;
-}
-
-.section-title {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 26px;
-}
-
-.candidates {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-}
-
+.candidate-section { margin-bottom: 35px; }
+.section-title { text-align: center; margin-bottom: 20px; font-size: 26px; }
+.candidates { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 22px; }
 .candidate {
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid #334155;
-    border-radius: 16px;
-    padding: 30px 20px;
-    text-align: center;
-    transition: 0.2s;
+    background: rgba(15, 23, 42, 0.85); border: 1px solid #334155;
+    border-radius: 16px; padding: 30px 20px; text-align: center; transition: 0.2s;
 }
-
-.candidate:hover {
-    transform: translateY(-4px);
-    border-color: #475569;
-}
-
+.candidate:hover { transform: translateY(-4px); border-color: #475569; }
 .candidate-icon {
-    width: 65px;
-    height: 65px;
-    margin: 0 auto 18px;
-    border-radius: 50%;
-    background: #1e40af;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 25px;
-    font-weight: bold;
+    width: 65px; height: 65px; margin: 0 auto 18px; border-radius: 50%;
+    background: #1e40af; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: bold;
 }
-
-.candidate h2 {
-    margin-bottom: 8px;
-}
-
-.candidate-role {
-    color: #64748b;
-    margin-bottom: 20px;
-}
-
-.votes {
-    color: #cbd5e1;
-    margin-bottom: 20px;
-    font-size: 16px;
-}
-
+.candidate h2 { margin-bottom: 8px; overflow-wrap: anywhere; }
+.candidate-role { color: #64748b; margin-bottom: 20px; }
+.votes { color: #cbd5e1; margin-bottom: 20px; font-size: 16px; }
 .vote-button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background: #475569;
-    color: #94a3b8;
-    font-size: 15px;
-    cursor: not-allowed;
+    width: 100%; padding: 12px; border: none; border-radius: 8px;
+    background: #475569; color: #94a3b8; font-size: 15px; cursor: not-allowed;
 }
-
-.vote-button:not(:disabled) {
-    background: #2563eb;
-    color: white;
-    cursor: pointer;
+.vote-button:not(:disabled) { background: #2563eb; color: white; cursor: pointer; }
+.vote-button:not(:disabled):hover { background: #1d4ed8; }
+.empty-candidates {
+    grid-column: 1 / -1; text-align: center; padding: 35px 20px;
+    color: #94a3b8; background: rgba(15, 23, 42, 0.65);
+    border: 1px dashed #475569; border-radius: 12px;
 }
-
-.vote-button:not(:disabled):hover {
-    background: #1d4ed8;
-}
-
-/* System Status */
 
 .system-status {
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid #334155;
-    border-radius: 14px;
-    padding: 28px;
-    margin-bottom: 35px;
+    background: rgba(15, 23, 42, 0.85); border: 1px solid #334155;
+    border-radius: 14px; padding: 28px; margin-bottom: 35px;
 }
-
-.system-status h2 {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.status-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
+.system-status h2 { text-align: center; margin-bottom: 25px; }
+.status-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
 .status-item {
-    background: #111827;
-    border-radius: 10px;
-    padding: 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+    background: #111827; border-radius: 10px; padding: 18px;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
 }
+.status-label { color: #cbd5e1; }
+.status-value { font-weight: bold; text-align: right; }
 
-.status-label {
-    color: #cbd5e1;
-}
-
-.status-value {
-    font-weight: bold;
-    text-align: right;
-}
-
-/* Footer */
-
-footer {
-    text-align: center;
-    padding: 20px;
-    color: #94a3b8;
-}
-
-.footer-subtitle {
-    margin-top: 6px;
-    font-size: 13px;
-    color: #64748b;
-}
-
-/* Responsive */
+footer { text-align: center; padding: 20px; color: #94a3b8; }
+.footer-subtitle { margin-top: 6px; font-size: 13px; color: #64748b; }
 
 @media (max-width: 800px) {
-    header h1 {
-        font-size: 32px;
-    }
-
-    .candidates {
-        grid-template-columns: 1fr;
-    }
-
-    .status-grid,
-    .schedule-details {
-        grid-template-columns: 1fr;
-    }
+    header h1 { font-size: 32px; }
+    .status-grid, .schedule-details { grid-template-columns: 1fr; }
 }
-
 @media (max-width: 500px) {
-    body {
-        padding: 25px 12px;
-    }
-
-    .notice {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .schedule-section {
-        padding: 18px;
-    }
-
-    .status-item {
-        align-items: flex-start;
-        flex-direction: column;
-    }
+    body { padding: 25px 12px; }
+    .notice { flex-direction: column; text-align: center; }
+    .schedule-section { padding: 18px; }
+    .status-item { align-items: flex-start; flex-direction: column; }
 }
-
-[hidden] {
-    display: none !important;
-}
+[hidden] { display: none !important; }

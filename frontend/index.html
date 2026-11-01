@@ -1,276 +1,126 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Decentralized Voting System</title>
-
     <link rel="stylesheet" href="style.css">
-
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"></script>
 </head>
-
 <body>
-
     <div class="container">
-
         <header>
             <h1>Decentralized Voting System</h1>
-            <p class="subtitle">
-                Blockchain-Based Secure Voting Platform
-            </p>
+            <p class="subtitle">Blockchain-Based Secure Voting Platform</p>
         </header>
 
-        <!-- Voting Notice -->
-
         <section class="notice">
-
             <div class="notice-icon">🔒</div>
-
             <div>
                 <h2 id="votingTitle">Voting System</h2>
-
-                <p id="votingMessage">
-                    Connect your MetaMask wallet to access the voting system.
-                </p>
+                <p id="votingMessage">Connect your MetaMask wallet to access the voting system.</p>
             </div>
-
         </section>
-
-        <!-- Wallet Connection -->
 
         <section class="wallet-section">
-
             <h2>Wallet Connection</h2>
-
             <p id="walletStatus">Wallet: Not Connected</p>
-
-            <button id="connectWallet">
-                Connect Wallet
-            </button>
-
+            <button id="connectWallet">Connect Wallet</button>
         </section>
 
-        <!-- Voting Schedule -->
-
         <section class="schedule-section">
-
             <h2>Voting Schedule</h2>
 
             <div class="schedule-status">
-
                 <p>Current Status</p>
-
-                <h3 id="scheduleStatus">
-                    Schedule Not Set
-                </h3>
-
-                <p id="countdown">
-                    Waiting for admin to set the schedule.
-                </p>
-
+                <h3 id="scheduleStatus">Schedule Not Set</h3>
+                <p id="countdown">Waiting for admin to set the schedule.</p>
             </div>
 
             <div class="schedule-details">
-
                 <div>
                     <span>Voting Start</span>
                     <p id="scheduleStartDisplay">Not Set</p>
                 </div>
-
                 <div>
                     <span>Voting End</span>
                     <p id="scheduleEndDisplay">Not Set</p>
                 </div>
-
             </div>
-
-            <!-- Admin Only -->
 
             <div id="adminPanel" class="admin-panel" hidden>
-
                 <h3>Admin Controls</h3>
+                <p class="admin-description">Manage candidates and set the voting schedule. These controls are available only to the contract owner.</p>
 
-                <p class="admin-description">
-                    Set the date and time for the voting process.
-                </p>
+                <div id="scheduleControls">
+                    <h4 class="admin-subheading">Voting Schedule</h4>
+                    <label for="startDateTime">Voting Start Date and Time</label>
+                    <input type="datetime-local" id="startDateTime" required>
 
-                <label for="startDateTime">
-                    Voting Start Date and Time
-                </label>
+                    <label for="endDateTime">Voting End Date and Time</label>
+                    <input type="datetime-local" id="endDateTime" required>
 
-                <input
-                    type="datetime-local"
-                    id="startDateTime"
-                    required
-                >
+                    <button id="setScheduleButton">Set Voting Schedule</button>
+                    <p id="scheduleMessage" class="feedback-message"></p>
+                </div>
 
-                <label for="endDateTime">
-                    Voting End Date and Time
-                </label>
+                <div id="candidateManagement" class="candidate-management">
+                    <h4 class="admin-subheading">Add Candidates</h4>
+                    <p class="admin-description">Add as many candidates as needed before voting starts. Candidate numbers are assigned automatically.</p>
 
-                <input
-                    type="datetime-local"
-                    id="endDateTime"
-                    required
-                >
+                    <label for="candidateName">Candidate Name</label>
+                    <input type="text" id="candidateName" maxlength="100" placeholder="Enter candidate name">
 
-                <button id="setScheduleButton">
-                    Set Voting Schedule
-                </button>
+                    <button id="addCandidateButton">Add Candidate</button>
+                    <p id="candidateMessage" class="feedback-message"></p>
 
-                <p id="scheduleMessage"></p>
-
+                    <div class="admin-candidate-list-wrap">
+                        <h4>Current Candidate List</h4>
+                        <ol id="adminCandidateList" class="admin-candidate-list">
+                            <li>No candidates added yet.</li>
+                        </ol>
+                    </div>
+                </div>
             </div>
 
-            <p class="timezone-note">
-                Schedule times are entered in your computer's local timezone.
-                The blockchain stores them as Unix timestamps.
-            </p>
-
+            <p class="timezone-note">Schedule times are entered in your computer's local timezone. The blockchain stores them as Unix timestamps.</p>
         </section>
-
-        <!-- Candidates -->
 
         <section class="candidate-section">
-
             <h2 class="section-title">Candidates</h2>
-
-            <div class="candidates">
-
-                <div class="candidate">
-
-                    <div class="candidate-icon">A</div>
-
-                    <h2>Candidate A</h2>
-
-                    <p class="candidate-role">Candidate</p>
-
-                    <div class="votes">
-                        Votes:
-                        <span id="votesA">0</span>
-                    </div>
-
-                    <button
-                        class="vote-button"
-                        id="voteA"
-                        data-candidate-id="0"
-                        disabled
-                    >
-                        Vote
-                    </button>
-
-                </div>
-
-                <div class="candidate">
-
-                    <div class="candidate-icon">B</div>
-
-                    <h2>Candidate B</h2>
-
-                    <p class="candidate-role">Candidate</p>
-
-                    <div class="votes">
-                        Votes:
-                        <span id="votesB">0</span>
-                    </div>
-
-                    <button
-                        class="vote-button"
-                        id="voteB"
-                        data-candidate-id="1"
-                        disabled
-                    >
-                        Vote
-                    </button>
-
-                </div>
-
-                <div class="candidate">
-
-                    <div class="candidate-icon">C</div>
-
-                    <h2>Candidate C</h2>
-
-                    <p class="candidate-role">Candidate</p>
-
-                    <div class="votes">
-                        Votes:
-                        <span id="votesC">0</span>
-                    </div>
-
-                    <button
-                        class="vote-button"
-                        id="voteC"
-                        data-candidate-id="2"
-                        disabled
-                    >
-                        Vote
-                    </button>
-
-                </div>
-
+            <div class="candidates" id="candidatesList">
+                <p class="empty-candidates">Candidates will appear here after the admin adds them.</p>
             </div>
-
         </section>
 
-        <!-- System Status -->
-
         <section class="system-status">
-
             <h2>System Status</h2>
-
             <div class="status-grid">
-
                 <div class="status-item">
                     <span class="status-label">Smart Contract</span>
-                    <span class="status-value" id="contractStatus">
-                        Not Connected
-                    </span>
+                    <span class="status-value" id="contractStatus">Not Connected</span>
                 </div>
-
                 <div class="status-item">
                     <span class="status-label">Blockchain Network</span>
-                    <span class="status-value" id="networkStatus">
-                        Not Connected
-                    </span>
+                    <span class="status-value" id="networkStatus">Not Connected</span>
                 </div>
-
                 <div class="status-item">
                     <span class="status-label">Wallet</span>
-                    <span class="status-value" id="walletSystemStatus">
-                        Not Connected
-                    </span>
+                    <span class="status-value" id="walletSystemStatus">Not Connected</span>
                 </div>
-
                 <div class="status-item">
                     <span class="status-label">Voting</span>
-                    <span class="status-value" id="votingStatus">
-                        Not Connected
-                    </span>
+                    <span class="status-value" id="votingStatus">Not Connected</span>
                 </div>
-
             </div>
-
         </section>
 
         <footer>
-
             <p>Decentralized Voting System</p>
-
-            <p class="footer-subtitle">
-                Blockchain Integration Active
-            </p>
-
+            <p class="footer-subtitle">Blockchain Integration Active</p>
         </footer>
-
     </div>
 
     <script src="script.js"></script>
-
 </body>
-
 </html>

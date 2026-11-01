@@ -1,0 +1,42 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_34-b65f179d14bec7d56f4bc30688db6822cde2e5bd",
+  "solcVersion": "0.8.34",
+  "solcLongVersion": "0.8.34+commit.80d5c536",
+  "compilerType": "solc",
+  "userSourceNameMap": {
+    "contracts/Voting.sol": "project/contracts/Voting.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "osaka",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/Voting.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.24;\r\n\r\ncontract Voting {\r\n    struct Candidate {\r\n        string name;\r\n        uint256 voteCount;\r\n    }\r\n\r\n    Candidate[] public candidates;\r\n    mapping(address => bool) public hasVoted;\r\n\r\n    address public owner;\r\n\r\n    uint256 public votingStartTime;\r\n    uint256 public votingEndTime;\r\n\r\n    bool public scheduleSet;\r\n    bool public manuallyEnded;\r\n\r\n    event CandidateAdded(uint256 indexed candidateId, string name);\r\n    event VoteCast(address indexed voter, uint256 indexed candidateId);\r\n    event VotingScheduleSet(uint256 startTime, uint256 endTime);\r\n    event VotingEnded();\r\n\r\n    modifier onlyOwner() {\r\n        require(msg.sender == owner, \"Only owner can perform this action\");\r\n        _;\r\n    }\r\n\r\n    constructor() {\r\n        owner = msg.sender;\r\n        scheduleSet = false;\r\n        manuallyEnded = false;\r\n        // Candidates are intentionally not hardcoded.\r\n        // The admin adds candidates through the website.\r\n    }\r\n\r\n    // Admin can add candidates until the scheduled start time.\r\n    function addCandidate(string calldata name) external onlyOwner {\r\n        require(bytes(name).length > 0, \"Candidate name cannot be empty\");\r\n\r\n        if (scheduleSet) {\r\n            require(\r\n                block.timestamp < votingStartTime,\r\n                \"Candidates can only be added before voting starts\"\r\n            );\r\n        }\r\n\r\n        uint256 candidateId = candidates.length;\r\n        candidates.push(Candidate(name, 0));\r\n\r\n        emit CandidateAdded(candidateId, name);\r\n    }\r\n\r\n    // Admin sets or changes the schedule before voting starts.\r\n    function setVotingSchedule(\r\n        uint256 startTime,\r\n        uint256 endTime\r\n    ) external onlyOwner {\r\n        require(candidates.length > 0, \"Add at least one candidate first\");\r\n\r\n        require(\r\n            !scheduleSet || block.timestamp < votingStartTime,\r\n            \"Schedule cannot be changed after voting starts\"\r\n        );\r\n\r\n        require(startTime > block.timestamp, \"Start time must be in the future\");\r\n        require(endTime > startTime, \"End time must be after start time\");\r\n\r\n        votingStartTime = startTime;\r\n        votingEndTime = endTime;\r\n        scheduleSet = true;\r\n        manuallyEnded = false;\r\n\r\n        emit VotingScheduleSet(startTime, endTime);\r\n    }\r\n\r\n    function votingActive() public view returns (bool) {\r\n        if (!scheduleSet || manuallyEnded) {\r\n            return false;\r\n        }\r\n\r\n        return (\r\n            block.timestamp >= votingStartTime &&\r\n            block.timestamp <= votingEndTime\r\n        );\r\n    }\r\n\r\n    function votingHasEnded() public view returns (bool) {\r\n        return (\r\n            manuallyEnded ||\r\n            (scheduleSet && block.timestamp > votingEndTime)\r\n        );\r\n    }\r\n\r\n    function vote(uint256 candidateId) external {\r\n        require(votingActive(), \"Voting is not active or outside schedule\");\r\n        require(!hasVoted[msg.sender], \"You have already voted\");\r\n        require(candidateId < candidates.length, \"Invalid candidate\");\r\n\r\n        hasVoted[msg.sender] = true;\r\n        candidates[candidateId].voteCount++;\r\n\r\n        emit VoteCast(msg.sender, candidateId);\r\n    }\r\n\r\n    function endVoting() external onlyOwner {\r\n        require(votingActive(), \"Voting is not active\");\r\n        manuallyEnded = true;\r\n        emit VotingEnded();\r\n    }\r\n\r\n    function getCandidateCount() external view returns (uint256) {\r\n        return candidates.length;\r\n    }\r\n\r\n    function getCandidate(\r\n        uint256 candidateId\r\n    ) external view returns (string memory name, uint256 voteCount) {\r\n        require(candidateId < candidates.length, \"Invalid candidate\");\r\n\r\n        Candidate memory candidate = candidates[candidateId];\r\n        return (candidate.name, candidate.voteCount);\r\n    }\r\n}\r\n"
+      }
+    }
+  }
+}
